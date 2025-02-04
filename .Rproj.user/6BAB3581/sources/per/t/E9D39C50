@@ -1,0 +1,26 @@
+{
+    "id": "E9D39C50",
+    "path": "~/Disc golf analytics/Aging curves/Disc-Golf-Aging-Curves/Organization script.r",
+    "project_path": "Organization script.r",
+    "type": "r_source",
+    "hash": "276880318",
+    "contents": "",
+    "dirty": true,
+    "created": 1738689091554.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "12,5",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1682963310,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1738689176764,
+    "read_only": false,
+    "read_only_alternatives": []
+}
