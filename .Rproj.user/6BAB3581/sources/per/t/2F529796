@@ -3,7 +3,7 @@
     "path": "~/Disc golf analytics/Aging curves/Disc-Golf-Aging-Curves/MPO Aging2.r",
     "project_path": "MPO Aging2.r",
     "type": "r_source",
-    "hash": "661439906",
+    "hash": "2077784097",
     "contents": "",
     "dirty": false,
     "created": 1738690311471.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "94,36",
-        "scrollLine": "84"
+        "cursorPosition": "5,27",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1683731077,
+    "lastKnownWriteTime": 1739293870,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1683731077,
+    "last_content_update": 1739293870156,
     "read_only": false,
     "read_only_alternatives": []
 }

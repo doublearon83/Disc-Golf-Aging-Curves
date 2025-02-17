@@ -3,6 +3,8 @@ require(lmerTest)
 require(MuMIn)
 require(cAIC4)
 
+# read in age and PDGA data
+MPO_ar <- read.csv("MPO_ar.csv",header=T)
 
 #MPO_ar dataset comes from "MPO_Aging.r" script
 MPO_ar$years<-scale(MPO_ar$year)
