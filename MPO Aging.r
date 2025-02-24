@@ -1,5 +1,5 @@
 #Upload and clean age data
-MPO_a<-read.csv("C:/Users/ahoward1/Documents/Disc golf analytics/Aging curves/Ages.csv",header=T,sep=",")
+MPO_a<-read.csv("C:/Users/ahoward1/Documents/Disc golf analytics/Aging curves/Disc-Golf-Aging-Curves/Ages.csv",header=T,sep=",")
 MPO_a$Age<-numeric(nrow(MPO_a))
 for (i in 1:nrow(MPO_a)){
   MPO_a$Age[i]<-substr(as.character(MPO_a$Date[i]),(nchar(as.character(MPO_a$Date[i]))-3),nchar(as.character(MPO_a$Date[i])))
