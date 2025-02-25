@@ -68,9 +68,9 @@ opt_gmm = Optimal_Clusters_GMM(clustdm[,1:7], max_clusters = 10, criterion = "BI
                                plot_data = T)
 
 #generate predictions for 2-6 classes
-nc <- c(2:6)
-clss <- as.data.frame(matrix(0,nrow=nrow(clustdm),ncol=length(nc)))
-for (i in 1:length(nc)) {
+nc <- c(2:6) #setting number of clusters
+clss <- as.data.frame(matrix(0,nrow=nrow(clustdm),ncol=length(nc))) #dataframe for output from models
+for (i in 1:length(nc)) { #setup loop to run 5 times 
 
 #generating classes
 gmm = GMM(clustdm[,1:7], nc[i], dist_mode = "maha_dist", seed_mode = "random_subset", km_iter = 10,
@@ -112,6 +112,36 @@ names(clss_sc)[i] <- paste(nc_krn[i,1],nc_krn[i,2],sep="_")
 ggplot(clustdm, aes(x=c1z, y = c1pz, color = factor(cluster_labels_SC))) + geom_point(size=3)
 
 
+########################
+###k-means clustering###
+########################
+
+#sil_width <- sapply(2:10, function(k) {
+  #km <- kmeans(clustdm[,1:7], centers=k, nstart=20)
+  #mean(silhouette(km$cluster, dist(clustdm[,1:7]))[, 3])
+#})
+
+#library(factoextra)
+
+#making only numeric values
+#clustdm <- clustdm[,sapply(clustdm, is.numeric)]
+#clustdm_scaled <- scale(clustdm)
+
+#fviz_nbclust(data_nc19, kmeans, method = "wss")
+
+nc <- c(2:6)
+#make dataframe
+
+clss_kmeans <- matrix(NA, nrow = nrow(clustdm), ncol = length(nc))
+
+for (i in 1:length(nc)){
+kmout<- kmeans(clustdm[,1:7],centers=nc[i],nstart=20)
+clss_kmeans[, i] <- kmout$cluster #call correct column of dataframe
+}
+
+clss_kmeans <- as.data.frame(clss_kmeans)
+
 
 #combine datasets for cross-validation
 clustdm_cv <- cbind(clustdm,clss,clss_sc,clss_hc)
+
