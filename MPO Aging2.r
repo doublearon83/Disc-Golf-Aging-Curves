@@ -48,14 +48,24 @@ test <- unique(MPO_ar_pt$PDGA)[!unique(MPO_ar_pt$PDGA) %in% train]
 MPO_ar_pt_train <- MPO_ar_pt[MPO_ar_pt$PDGA %in% train,]
 MPO_ar_pt_test <- MPO_ar_pt[MPO_ar_pt$PDGA %in% test,]
 
-outp<-lm(ratr~MPO_ar_pt_train[,j]*ages+MPO_ar_pt_train[,j]*I(ages^2)+MPO_ar_pt_train[,j]*I(ages^3),data=MPO_ar_pt_train)
-sumsq_p[i] <- sum((predict(outp,MPO_ar_pt_test)-MPO_ar_pt_test$ratr)^2)
+pt_type <- MPO_ar_pt_train[,j]
+pt_ages <- MPO_ar_pt_train$ages
+pt_ratr <- MPO_ar_pt_train$ratr
+MPO_ar_pt_train2 <- data.frame(pt_type,pt_ages,pt_ratr)
+
+outp<-lm(pt_ratr~pt_type*pt_ages+pt_type*I(pt_ages^2)+pt_type*I(pt_ages^3),data=MPO_ar_pt_train2)
+
+pt_type <- MPO_ar_pt_test[,j]
+pt_ages <- MPO_ar_pt_test$ages
+pt_ratr <- MPO_ar_pt_test$ratr
+MPO_ar_pt_test2 <- data.frame(pt_type,pt_ages,pt_ratr)
+sumsq_p[i] <- sum((predict(outp,MPO_ar_pt_test2)-MPO_ar_pt_test2$pt_ratr)^2)
 
 out<-lm(ratr~ages+I(ages^2)+I(ages^3),data=MPO_ar_pt_train)
 sumsq[i] <- sum((predict(out,MPO_ar_pt_test)-MPO_ar_pt_test$ratr)^2)
 }
-[(j+1)-(ncol(MPO_ar_tune2)-44),] <- mean(sumsq_p)
-mean(sumsq)
+mean_SS_t[j+1-13,1] <- mean(sumsq_p)
+mean_SS_t[j+1-13,2] <- mean(sumsq)
 
 print(j)
 }
