@@ -116,32 +116,25 @@ ggplot(clustdm, aes(x=c1z, y = c1pz, color = factor(cluster_labels_SC))) + geom_
 ###k-means clustering###
 ########################
 
-#sil_width <- sapply(2:10, function(k) {
-  #km <- kmeans(clustdm[,1:7], centers=k, nstart=20)
-  #mean(silhouette(km$cluster, dist(clustdm[,1:7]))[, 3])
-#})
-
-#library(factoextra)
-
-#making only numeric values
-#clustdm <- clustdm[,sapply(clustdm, is.numeric)]
-#clustdm_scaled <- scale(clustdm)
-
-#fviz_nbclust(data_nc19, kmeans, method = "wss")
-
 nc <- c(2:6)
 #make dataframe
 
-clss_kmeans <- matrix(NA, nrow = nrow(clustdm), ncol = length(nc))
+km_types <- c("Hartigan-Wong", "Lloyd", "Forgy","MacQueen") #different grouping types from k means
+nc_kmean <- expand.grid(nc = nc,km_types = km_types) #uses expand grid
 
-for (i in 1:length(nc)){
-kmout<- kmeans(clustdm[,1:7],centers=nc[i],nstart=20)
+clss_kmeans <- as.data.frame(matrix(0, nrow = nrow(clustdm), ncol = nrow(nc_kmean)))
+
+for (i in 1:nrow(nc_kmean)){
+  kmout<- kmeans(as.matrix(clustdm[,1:7]),
+                           centers = as.numeric(nc_kmean$nc[i]),
+                           nstart=20,
+                           algorithm = as.character(nc_kmean$km_type[i]))
 clss_kmeans[, i] <- kmout$cluster #call correct column of dataframe
+names(clss_kmeans)[i] <- paste(nc_kmean[i,1], nc_kmean[i,2], sep = "_")
 }
 
 clss_kmeans <- as.data.frame(clss_kmeans)
 
-
 #combine datasets for cross-validation
-clustdm_cv <- cbind(clustdm,clss,clss_sc,clss_hc)
+clustdm_cv <- cbind(clustdm,clss,clss_sc,clss_hc,clss_kmeans)
 
