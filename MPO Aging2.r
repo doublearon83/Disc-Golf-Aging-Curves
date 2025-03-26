@@ -15,8 +15,9 @@ MPO_ar$ages<-scale(MPO_ar$Age)
 MPO_ar_tune <- data.frame(matrix(0,nrow=nrow(MPO_ar),ncol=ncol(cbind(clss,clss_sc,clss_hc,clss_kmeans))))
 for (i in 1:nrow(MPO_ar))
 {
-  if (any(grepl(MPO_ar$Name[i],clustdm_cv$names))) {MPO_ar_tune[i,]<-as.numeric(clustdm_cv[grep(paste(MPO_ar$Name_f[i],MPO_ar$Name[i],sep = " "),clustdm_cv$names),c(9:ncol(clustdm_cv))])} 
+  if (any(grepl(paste(MPO_ar$Name_f[i],MPO_ar$Name[i],sep=" "),clustdm_cv$names))) {MPO_ar_tune[i,]<-as.numeric(clustdm_cv[grep(paste(MPO_ar$Name_f[i],MPO_ar$Name[i],sep = " "),clustdm_cv$names),c(9:ncol(clustdm_cv))])} 
   else (MPO_ar_tune[i,]<-"NA")
+  print(i)
 }
 
 #remove NAs and player type 3 (not enough age data for player type 3)
@@ -33,12 +34,17 @@ MPO_ar_pt <- subset(MPO_ar_tune2,MPO_ar_tune2$nc2!="NA")
 
 #run loops
 
-mean_SS_t <- data.frame(matrix(0,nrow=ncol(cbind(clss,clss_sc,clss_hc,clss_kmeans)),ncol=8))
-
+mean_SS_t <- data.frame(matrix(0,nrow=ncol(cbind(clss,clss_sc,clss_hc,clss_kmeans)),ncol=6))
+colnames(mean_SS_t) <- c("Mean_SSE_PlayerType", "Mean_SSE_NoPlayerType", "Mean_MSE_PlayerType", "Mean_MSE_NoPlayerType", "Adj_R_Sqr_PlayerType", "Adj_R_Sqr_NoPlayerType")
 for (j in (ncol(MPO_ar_tune2)-64):ncol(MPO_ar_tune2)) {
 
 sumsq_p<-numeric(1000)
 sumsq<-numeric(1000)
+adj_r2 <- numeric(1000)
+adj_r2_p <- numeric(1000)
+mse_p <- numeric(1000)
+mse <- numeric(1000)
+
 #training size
 tz <- round(length(unique(MPO_ar_pt$PDGA))*.8)
 for (i in 1:1000){
@@ -63,30 +69,43 @@ MPO_ar_pt_test2 <- data.frame(pt_type,pt_ages,pt_ratr)
 #what is our method of measuring model predictive power
 sumsq_p[i] <- sum((predict(outp,MPO_ar_pt_test2)-MPO_ar_pt_test2$pt_ratr)^2)
 
+mse_p[i] <- sqrt(mean((predict(outp, MPO_ar_pt_test2) - MPO_ar_pt_test2$pt_ratr)^2))
+
+adj_r2_p[i] <- summary(outp)$adj.r.squared
+
 ######### i have no idea if this works ###########
 
 #use r squred to find some model fits
 
-adj_r2[i] <- summary(outp)$adj.r.squared
+#adj_r2[i] <- summary(outp)$adj.r.squared
 
 # look at MSE
 
-mse_p[i] <- mean((predict(outp, MPO_ar_pt_test2) - MPO_ar_pt_test2$pt_ratr)^2, na.rm = TRUE)
+#mse_p[i] <- mean((predict(outp, MPO_ar_pt_test2) - MPO_ar_pt_test2$pt_ratr)^2)
 
 # use AIC and or BIC to see if using more complex 
 #models is better (especially with the use of the fourth degree)
   
 ################################################
 
+# geberi
+
 out<-lm(ratr~ages+I(ages^2)+I(ages^3)+I(ages^4),data=MPO_ar_pt_train)
+
 sumsq[i] <- sum((predict(out,MPO_ar_pt_test)-MPO_ar_pt_test$ratr)^2)
 
-mse[i] <- mean((predict(out, MPO_ar_pt_test) - MPO_ar_pt_test$ratr)^2, na.rm = TRUE)
+mse[i] <- sqrt(mean((predict(out, MPO_ar_pt_test) - MPO_ar_pt_test$ratr)^2))
+
+adj_r2[i] <- summary(out)$adj.r.squared
 
 
 }
 mean_SS_t[j+1-13,1] <- mean(sumsq_p)
 mean_SS_t[j+1-13,2] <- mean(sumsq)
+mean_SS_t[j+1-13,3] <- mean(mse)
+mean_SS_t[j+1-13,4] <- mean(mse_p)
+mean_SS_t[j+1-13,5] <- mean(adj_r2)
+mean_SS_t[j+1-13,6] <- mean(adj_r2_p)
 
 print(j)
 }
