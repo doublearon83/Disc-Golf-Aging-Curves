@@ -17,7 +17,7 @@ for (i in 1:nrow(MPO_ar))
 {
   if (any(grepl(paste(MPO_ar$Name_f[i],MPO_ar$Name[i],sep=" "),clustdm_cv$names))) {MPO_ar_tune[i,]<-as.numeric(clustdm_cv[grep(paste(MPO_ar$Name_f[i],MPO_ar$Name[i],sep = " "),clustdm_cv$names),c(9:ncol(clustdm_cv))])} 
   else (MPO_ar_tune[i,]<-"NA")
-  print(i)
+  #print(i)
 }
 
 #remove NAs and player type 3 (not enough age data for player type 3)
@@ -51,8 +51,22 @@ for (i in 1:1000){
 train <- sample(unique(MPO_ar_pt$PDGA),tz)
 test <- unique(MPO_ar_pt$PDGA)[!unique(MPO_ar_pt$PDGA) %in% train]
 
+MPO_ar_pt[,j]<-as.factor(MPO_ar_pt[,j])
+
 MPO_ar_pt_train <- MPO_ar_pt[MPO_ar_pt$PDGA %in% train,]
 MPO_ar_pt_test <- MPO_ar_pt[MPO_ar_pt$PDGA %in% test,]
+
+#ensure all player types from test are in training set
+while (!all(unique(MPO_ar_pt_test[,j]) %in% unique(MPO_ar_pt_train[,j]))) {
+  train <- sample(unique(MPO_ar_pt$PDGA),tz)
+  test <- unique(MPO_ar_pt$PDGA)[!unique(MPO_ar_pt$PDGA) %in% train]
+  
+  MPO_ar_pt[,j]<-as.factor(MPO_ar_pt[,j])
+  
+  MPO_ar_pt_train <- MPO_ar_pt[MPO_ar_pt$PDGA %in% train,]
+  MPO_ar_pt_test <- MPO_ar_pt[MPO_ar_pt$PDGA %in% test,] 
+  
+}
 
 pt_type <- MPO_ar_pt_train[,j]
 pt_ages <- MPO_ar_pt_train$ages
