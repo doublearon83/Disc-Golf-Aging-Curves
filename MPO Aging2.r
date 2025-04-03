@@ -36,8 +36,7 @@ MPO_ar_pt <- subset(MPO_ar_tune2,MPO_ar_tune2$nc2!="NA")
 
 mean_SS_t <- data.frame(matrix(0,nrow=ncol(cbind(clss,clss_sc,clss_hc,clss_kmeans)),ncol=6))
 colnames(mean_SS_t) <- c("Mean_SSE_PlayerType", "Mean_SSE_NoPlayerType", "Mean_MSE_PlayerType", "Mean_MSE_NoPlayerType", "Adj_R_Sqr_PlayerType", "Adj_R_Sqr_NoPlayerType")
-#for (j in (ncol(MPO_ar_tune2)-64):ncol(MPO_ar_tune2)) {
-for (j in 44:ncol(MPO_ar_tune2)) {
+for (j in (ncol(MPO_ar_tune2)-64):ncol(MPO_ar_tune2)) {
     
 
 sumsq_p<-numeric(1000)
