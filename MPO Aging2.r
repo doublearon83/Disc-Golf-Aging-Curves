@@ -36,7 +36,9 @@ MPO_ar_pt <- subset(MPO_ar_tune2,MPO_ar_tune2$nc2!="NA")
 
 mean_SS_t <- data.frame(matrix(0,nrow=ncol(cbind(clss,clss_sc,clss_hc,clss_kmeans)),ncol=6))
 colnames(mean_SS_t) <- c("Mean_SSE_PlayerType", "Mean_SSE_NoPlayerType", "Mean_MSE_PlayerType", "Mean_MSE_NoPlayerType", "Adj_R_Sqr_PlayerType", "Adj_R_Sqr_NoPlayerType")
-for (j in (ncol(MPO_ar_tune2)-64):ncol(MPO_ar_tune2)) {
+#for (j in (ncol(MPO_ar_tune2)-64):ncol(MPO_ar_tune2)) {
+for (j in 44:ncol(MPO_ar_tune2)) {
+    
 
 sumsq_p<-numeric(1000)
 sumsq<-numeric(1000)
@@ -44,6 +46,18 @@ adj_r2 <- numeric(1000)
 adj_r2_p <- numeric(1000)
 mse_p <- numeric(1000)
 mse <- numeric(1000)
+
+# check if have >1 player type for analysis
+if (length(unique(MPO_ar_pt[,j]))==1) {
+  
+  mean_SS_t[j+1-13,1] <- "NA"
+  mean_SS_t[j+1-13,2] <- "NA"
+  mean_SS_t[j+1-13,3] <- "NA"
+  mean_SS_t[j+1-13,4] <- "NA"
+  mean_SS_t[j+1-13,5] <- "NA"
+  mean_SS_t[j+1-13,6] <- "NA"
+  
+} else {
 
 #training size
 tz <- round(length(unique(MPO_ar_pt$PDGA))*.8)
@@ -120,6 +134,7 @@ mean_SS_t[j+1-13,3] <- mean(mse)
 mean_SS_t[j+1-13,4] <- mean(mse_p)
 mean_SS_t[j+1-13,5] <- mean(adj_r2)
 mean_SS_t[j+1-13,6] <- mean(adj_r2_p)
+}
 
 print(j)
 }
